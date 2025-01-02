@@ -1,18 +1,19 @@
 package com.example.automation;
 
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.junit.jupiter.api.Test;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LoginAutomationTest {
 
     @Test
     public void testLogin() {
-        // Set up the WebDriver with the correct path to ChromeDriver
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\akash\\Downloads\\chromedriver-win64\\chromedriver-win64.exe");
+        // Set up WebDriverManager to automatically handle ChromeDriver
+        WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
 
         try {
