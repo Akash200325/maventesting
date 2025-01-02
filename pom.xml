@@ -34,7 +34,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.14.0</version> <!-- Ensure this version exists and is compatible -->
+                <version>3.14.0</version>
                 <executions>
                     <execution>
                         <id>default-check</id>
@@ -44,7 +44,7 @@
                         </goals>
                         <configuration>
                             <rulesets>
-                                <ruleset>rulesets/java/quickstart.xml</ruleset>
+                                <ruleset>rulesets/custom-ruleset.xml</ruleset> <!-- Use custom PMD ruleset -->
                             </rulesets>
                         </configuration>
                     </execution>
@@ -56,14 +56,52 @@
                         </goals>
                         <configuration>
                             <rulesets>
-                                <ruleset>rulesets/java/quickstart.xml</ruleset>
+                                <ruleset>rulesets/custom-ruleset.xml</ruleset> <!-- Use custom PMD ruleset -->
                             </rulesets>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
 
-            <!-- Other plugins -->
+            <!-- Checkstyle Plugin for code style validation -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <id>checkstyle</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <configLocation>config/checkstyle/google_checks.xml</configLocation> <!-- Checkstyle config file -->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- CPD (Copy-Paste Detector) Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.14.0</version>
+                <executions>
+                    <execution>
+                        <id>cpd</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>cpd</goal>
+                        </goals>
+                        <configuration>
+                            <minimumTokens>100</minimumTokens> <!-- Set minimum tokens for CPD -->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Maven Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
