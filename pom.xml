@@ -105,6 +105,63 @@
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>3.9.1.2184</version>
             </plugin>
+
+            <!-- PMD Maven Plugin for Static Code Analysis -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>pmd-maven-plugin</artifactId>
+                <version>3.13.0</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>pmd</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <minimumTokens>100</minimumTokens>
+                    <rulesets>
+                        <ruleset>/rulesets/java/quickstart.xml</ruleset>
+                    </rulesets>
+                </configuration>
+            </plugin>
+
+            <!-- CPD (Copy/Paste Detector) Plugin for Code Duplication -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>pmd-maven-plugin</artifactId>
+                <version>3.13.0</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>cpd</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <minimumTokens>100</minimumTokens> <!-- Minimum tokens for duplication detection -->
+                </configuration>
+            </plugin>
+
+            <!-- Checkstyle Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <configLocation>google_checks.xml</configLocation> <!-- Specify Checkstyle configuration file -->
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
