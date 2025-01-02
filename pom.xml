@@ -1,56 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<settings xmlns="http://maven.apache.org/SETTINGS/1.2.0"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0 https://maven.apache.org/xsd/settings-1.2.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   
-  <!-- Repository Configuration (Maven Central) -->
-  <mirrors>
-    <!-- Mirror to use Maven Central for downloading dependencies -->
-    <mirror>
+  <!-- Project Coordinates -->
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>my-app</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  
+  <name>My Maven Project</name>
+  <description>Sample Maven Project</description>
+  
+  <!-- Repositories for Dependency Resolution -->
+  <repositories>
+    <repository>
       <id>central</id>
-      <mirrorOf>central</mirrorOf>
-      <name>Central Repository</name>
       <url>https://repo.maven.apache.org/maven2</url>
-      <blocked>false</blocked>
-    </mirror>
-    
-    <!-- Optional: Unblock HTTP if needed -->
-    <mirror>
-      <id>maven-default-http-blocker</id>
-      <mirrorOf>external:http:*</mirrorOf>
-      <name>Pseudo repository to mirror external repositories initially using HTTP.</name>
-      <url>http://0.0.0.0/</url>
-      <blocked>true</blocked>
-    </mirror>
-  </mirrors>
+    </repository>
+  </repositories>
 
-  <!-- Proxy Configuration (Optional, uncomment if needed) -->
-  <proxies>
-    <proxy>
-      <id>example-proxy</id>
-      <active>true</active>
-      <protocol>http</protocol>
-      <username>proxyuser</username>
-      <password>proxypass</password>
-      <host>proxy.example.com</host>
-      <port>8080</port>
-      <nonProxyHosts>www.google.com|*.example.com</nonProxyHosts>
-    </proxy>
-  </proxies>
+  <!-- Build Configuration -->
+  <build>
+    <plugins>
+      <!-- Maven Compiler Plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
-  <!-- Servers Configuration (Optional for authentication) -->
-  <servers>
-    <!-- Define authentication credentials for your deployment or other servers if needed -->
-    <server>
-      <id>deploymentRepo</id>
-      <username>repouser</username>
-      <password>repopwd</password>
-    </server>
-  </servers>
+  <!-- Dependency Management -->
+  <dependencies>
+    <!-- Add your project dependencies here -->
+    <!-- Example: JUnit -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
-  <!-- Profile Configuration (Optional) -->
+  <!-- Profiles Configuration -->
   <profiles>
-    <!-- Define build profiles for different environments if needed -->
+    <!-- Development Profile -->
     <profile>
       <id>dev</id>
       <activation>
@@ -63,20 +64,42 @@
         <configPath>/path/to/dev/config</configPath>
       </properties>
     </profile>
-  </profiles>
-
-  <!-- Active Profiles (Optional) -->
-  <activeProfiles>
-    <activeProfile>dev</activeProfile>
-  </activeProfiles>
-
-  <!-- Increase Timeout (Optional) -->
-  <profiles>
+    
+    <!-- Production Profile (Optional) -->
     <profile>
-      <id>default</id>
+      <id>prod</id>
       <properties>
-        <http.connection.timeout>60000</http.connection.timeout> <!-- Increase timeout to 60s -->
+        <configPath>/path/to/prod/config</configPath>
       </properties>
     </profile>
   </profiles>
-</settings>
+
+  <!-- Properties -->
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+
+  <!-- Plugin Configuration for HTTP Timeout -->
+  <pluginManagement>
+    <plugins>
+      <!-- HTTP Connection Timeout -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.1.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <http.connection.timeout>60000</http.connection.timeout>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </pluginManagement>
+
+</project>
