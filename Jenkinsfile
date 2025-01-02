@@ -1,53 +1,30 @@
 pipeline {
     agent any
-
-    environment {
-        SONAR_HOST_URL = 'http://localhost:9000'
-        SONAR_TOKEN = 'sqp_c2f48f5ea3d3443b53e48a67a3d591b20d7f8d9a'
-    }
-
     stages {
-        stage('Checkout Code') {
+        stage('Build') {
             steps {
-                // Checkout code from GitHub repository
-                git branch: 'main', url: 'https://github.com/Akash200325/maventesting.git'
+                bat 'mvn clean install'
             }
         }
-
         stage('SonarQube Analysis') {
             steps {
-                script {
-                    // Execute Maven commands for build, test, and SonarQube analysis
+                withSonarQubeEnv('sonarqube') { // Replace 'SonarQube' with the name of your SonarQube server configuration
                     bat """
-                        mvn clean verify sonar:sonar ^
+                        mvn sonar:sonar ^
                         -Dsonar.projectKey=maventesting ^
-                        -Dsonar.projectName='maventesting' ^
-                        -Dsonar.host.url=${SONAR_HOST_URL} ^
-                        -Dsonar.token=${SONAR_TOKEN}
+                        -Dsonar.projectName="maventesting" ^
+                        -Dsonar.host.url=http://localhost:9000 ^
+                        -Dsonar.token=sqp_c2f48f5ea3d3443b53e48a67a3d591b20d7f8d9a
                     """
                 }
             }
         }
-
         stage('Quality Gate') {
             steps {
-                // Wait for SonarQube Quality Gate
                 timeout(time: 1, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
             }
-        }
-    }
-
-    post {
-        always {
-            echo 'Pipeline completed.'
-        }
-        success {
-            echo 'Build, test, and SonarQube analysis were successful!'
-        }
-        failure {
-            echo 'Pipeline failed. Check the logs for errors.'
         }
     }
 }
