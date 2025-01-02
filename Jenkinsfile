@@ -92,10 +92,4 @@ pipeline {
             }
         }
     }
-    post {
-        always {
-            archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
-            junit '**/target/test-*.xml'
-        }
-    }
 }
