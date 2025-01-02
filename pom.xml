@@ -44,8 +44,9 @@
                         </goals>
                         <configuration>
                             <rulesets>
-                                <ruleset>rulesets/java/quickstart.xml</ruleset>
+                                <ruleset>${pmd.ruleset}</ruleset> <!-- Using custom ruleset -->
                             </rulesets>
+                            <minimumTokens>${pmd.minimumTokens}</minimumTokens>
                         </configuration>
                     </execution>
                     <execution>
@@ -54,11 +55,6 @@
                         <goals>
                             <goal>pmd</goal>
                         </goals>
-                        <configuration>
-                            <rulesets>
-                                <ruleset>rulesets/java/quickstart.xml</ruleset>
-                            </rulesets>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -74,7 +70,7 @@
                             <goal>check</goal>
                         </goals>
                         <configuration>
-                            <configLocation>${checkstyle.configLocation}</configLocation>
+                            <configLocation>${checkstyle.configLocation}</configLocation> <!-- Using the custom config -->
                         </configuration>
                     </execution>
                 </executions>
@@ -101,16 +97,14 @@
 
             <!-- Maven Compiler Plugin -->
             <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.8.1</version> <!-- Ensure the version is correct -->
-            <configuration>
-                <source>17</source> <!-- Ensure compatibility with JDK version -->
-                <target>17</target> <!-- Ensure compatibility with JDK version -->
-            </configuration>
-        </plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>17</source>
+                    <target>17</target>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-
-
 </project>
