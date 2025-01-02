@@ -110,7 +110,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>pmd-maven-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>3.14.0</version> <!-- Updated version -->
                 <executions>
                     <execution>
                         <phase>validate</phase>
@@ -118,21 +118,6 @@
                             <goal>pmd</goal>
                         </goals>
                     </execution>
-                </executions>
-                <configuration>
-                    <minimumTokens>100</minimumTokens>
-                    <rulesets>
-                        <ruleset>/rulesets/java/quickstart.xml</ruleset>
-                    </rulesets>
-                </configuration>
-            </plugin>
-
-            <!-- CPD (Copy/Paste Detector) Plugin for Code Duplication -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>pmd-maven-plugin</artifactId>
-                <version>3.13.0</version>
-                <executions>
                     <execution>
                         <phase>validate</phase>
                         <goals>
@@ -141,7 +126,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <minimumTokens>100</minimumTokens> <!-- Minimum tokens for duplication detection -->
+                    <minimumTokens>100</minimumTokens>
+                    <rulesets>
+                        <ruleset>/rulesets/java/quickstart.xml</ruleset>
+                    </rulesets>
                 </configuration>
             </plugin>
 
