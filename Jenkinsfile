@@ -1,74 +1,101 @@
 pipeline {
     agent any
     environment {
-        SONARQUBE_TOKEN = 'sqp_c2f48f5ea3d3443b53e48a67a3d591b20d7f8d9a' // Your SonarQube token
-        SONARQUBE_URL = 'http://localhost:9000'   // Your SonarQube server URL
-        SONARQUBE_PROJECT_KEY = 'maventesting'    // Your SonarQube project key
-        SONARQUBE_PROJECT_NAME = 'maventesting'   // Your SonarQube project name
+        SONARQUBE_TOKEN = 'sqp_c2f48f5ea3d3443b53e48a67a3d591b20d7f8d9a'
+        SONARQUBE_URL = 'http://localhost:9000'
+        SONARQUBE_PROJECT_KEY = 'maventesting'
+        SONARQUBE_PROJECT_NAME = 'maventesting'
         
         // PMD settings
-        PMD_RULESET_PATH = 'rulesets/java/quickstart.xml'  // Path to PMD ruleset file
-        PMD_MINIMUM_TOKENS = 100  // Minimum tokens for PMD
+        PMD_RULESET_PATH = 'rulesets/custom-ruleset.xml'
+        PMD_MINIMUM_TOKENS = 100
 
-        // Checkstyle settings
-        CHECKSTYLE_CONFIG_FILE = 'google_checks.xml'  // Path to Checkstyle config file
-        
-        // CPD (Copy/Paste Detector) settings
-        CPD_MINIMUM_TOKENS = 100  // Minimum tokens for code duplication detection
+        // Checkstyle settings (updated to reflect new location)
+        CHECKSTYLE_CONFIG_FILE = 'config/checkstyle/google_checks.xml'
+
+        // CPD settings
+        CPD_MINIMUM_TOKENS = 100
     }
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                bat 'mvn clean install -X'
+                checkout scm
             }
         }
+        
+        stage('Build') {
+            steps {
+                script {
+                    bat 'mvn clean install -X'
+                }
+            }
+        }
+
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube') { // Ensure 'sonarqube' is correctly configured in Jenkins
+                withSonarQubeEnv('sonarqube') {
+                    script {
+                        bat """
+                            mvn sonar:sonar ^
+                            -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} ^
+                            -Dsonar.projectName=${SONARQUBE_PROJECT_NAME} ^
+                            -Dsonar.host.url=${SONARQUBE_URL} ^
+                            -Dsonar.login=${SONARQUBE_TOKEN}
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('PMD Analysis') {
+            steps {
+                script {
                     bat """
-                        mvn sonar:sonar ^ 
-                        -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} ^ 
-                        -Dsonar.projectName=${SONARQUBE_PROJECT_NAME} ^ 
-                        -Dsonar.host.url=${SONARQUBE_URL} ^ 
-                        -Dsonar.login=${SONARQUBE_TOKEN}
+                        mvn pmd:check ^
+                        -Dpmd.ruleset=${PMD_RULESET_PATH} ^
+                        -Dpmd.minimumTokens=${PMD_MINIMUM_TOKENS}
                     """
                 }
             }
         }
-        stage('PMD Analysis') {
-            steps {
-                bat """
-                    mvn pmd:check ^ 
-                    -Dpmd.ruleset=${PMD_RULESET_PATH} ^ 
-                    -Dpmd.minimumTokens=${PMD_MINIMUM_TOKENS}
-                """
-            }
-        }
+
         stage('Checkstyle Analysis') {
             steps {
-                bat """
-                    mvn checkstyle:check ^ 
-                    -Dcheckstyle.configLocation=${CHECKSTYLE_CONFIG_FILE}
-                """
+                script {
+                    bat """
+                        mvn checkstyle:check ^
+                        -Dcheckstyle.configLocation=${CHECKSTYLE_CONFIG_FILE}
+                    """
+                }
             }
         }
+
         stage('CPD Analysis') {
             steps {
-                bat """
-                    mvn pmd:cpd ^ 
-                    -Dpmd.cpd.minimumTokens=${CPD_MINIMUM_TOKENS}
-                """
+                script {
+                    bat """
+                        mvn pmd:cpd ^
+                        -Dpmd.cpd.minimumTokens=${CPD_MINIMUM_TOKENS}
+                    """
+                }
             }
         }
+
         stage('Quality Gate') {
             steps {
                 script {
-                    def qg = waitForQualityGate() // Check SonarQube Quality Gate status
+                    def qg = waitForQualityGate()
                     if (qg.status != 'OK') {
                         error "Pipeline aborted due to quality gate failure: ${qg.status}"
                     }
                 }
             }
+        }
+    }
+    post {
+        always {
+            archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
+            junit '**/target/test-*.xml'
         }
     }
 }
