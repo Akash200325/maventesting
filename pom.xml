@@ -19,7 +19,7 @@
     </properties>
 
     <dependencies>
-        <!-- Example Dependency -->
+        <!-- JUnit Dependency -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -32,8 +32,8 @@
         <plugins>
             <!-- PMD Plugin for static code analysis -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>pmd-maven-plugin</artifactId>
                 <version>3.14.0</version>
                 <executions>
                     <execution>
@@ -44,7 +44,7 @@
                         </goals>
                         <configuration>
                             <rulesets>
-                                <ruleset>rulesets/custom-ruleset.xml</ruleset> <!-- Use custom PMD ruleset -->
+                                <ruleset>rulesets/java/quickstart.xml</ruleset>
                             </rulesets>
                         </configuration>
                     </execution>
@@ -56,46 +56,44 @@
                         </goals>
                         <configuration>
                             <rulesets>
-                                <ruleset>rulesets/custom-ruleset.xml</ruleset> <!-- Use custom PMD ruleset -->
+                                <ruleset>rulesets/java/quickstart.xml</ruleset>
                             </rulesets>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
 
-            <!-- Checkstyle Plugin for code style validation -->
+            <!-- Checkstyle Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>3.1.1</version>
                 <executions>
                     <execution>
-                        <id>checkstyle</id>
-                        <phase>validate</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
                         <configuration>
-                            <configLocation>config/checkstyle/google_checks.xml</configLocation> <!-- Checkstyle config file -->
+                            <configLocation>${checkstyle.configLocation}</configLocation>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
 
-            <!-- CPD (Copy-Paste Detector) Plugin -->
+            <!-- CPD Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>3.14.0</version>
                 <executions>
                     <execution>
-                        <id>cpd</id>
+                        <id>cpd-check</id>
                         <phase>process-sources</phase>
                         <goals>
                             <goal>cpd</goal>
                         </goals>
                         <configuration>
-                            <minimumTokens>100</minimumTokens> <!-- Set minimum tokens for CPD -->
+                            <minimumTokens>${cpd.minimumTokens}</minimumTokens>
                         </configuration>
                     </execution>
                 </executions>
@@ -117,8 +115,8 @@
     <reporting>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>pmd-maven-plugin</artifactId>
                 <version>3.14.0</version>
                 <reportSets>
                     <reportSet>
