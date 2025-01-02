@@ -26,6 +26,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                    // Execute Maven build with debug logs
                     bat 'mvn clean install -X'
                 }
             }
@@ -36,11 +37,7 @@ pipeline {
                 withSonarQubeEnv('sonarqube') {
                     script {
                         bat """
-                            mvn sonar:sonar ^
-                            -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} ^
-                            -Dsonar.projectName=${SONARQUBE_PROJECT_NAME} ^
-                            -Dsonar.host.url=${SONARQUBE_URL} ^
-                            -Dsonar.login=${SONARQUBE_TOKEN}
+                            mvn sonar:sonar -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} -Dsonar.projectName=${SONARQUBE_PROJECT_NAME} -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.login=${SONARQUBE_TOKEN}
                         """
                     }
                 }
@@ -51,9 +48,7 @@ pipeline {
             steps {
                 script {
                     bat """
-                        mvn pmd:check ^
-                        -Dpmd.ruleset=${PMD_RULESET_PATH} ^
-                        -Dpmd.minimumTokens=${PMD_MINIMUM_TOKENS}
+                        mvn pmd:check -Dpmd.ruleset=${PMD_RULESET_PATH} -Dpmd.minimumTokens=${PMD_MINIMUM_TOKENS}
                     """
                 }
             }
@@ -63,8 +58,7 @@ pipeline {
             steps {
                 script {
                     bat """
-                        mvn checkstyle:check ^
-                        -Dcheckstyle.configLocation=${CHECKSTYLE_CONFIG_FILE}
+                        mvn checkstyle:check -Dcheckstyle.configLocation=${CHECKSTYLE_CONFIG_FILE}
                     """
                 }
             }
@@ -74,8 +68,7 @@ pipeline {
             steps {
                 script {
                     bat """
-                        mvn pmd:cpd ^
-                        -Dpmd.cpd.minimumTokens=${CPD_MINIMUM_TOKENS}
+                        mvn pmd:cpd -Dpmd.cpd.minimumTokens=${CPD_MINIMUM_TOKENS}
                     """
                 }
             }
