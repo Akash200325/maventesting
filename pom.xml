@@ -32,12 +32,12 @@
         <plugins>
             <!-- PMD Plugin for static code analysis -->
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>pmd-maven-plugin</artifactId>
-                <version>3.14.0</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.14.0</version> <!-- Ensure this version exists and is compatible -->
                 <executions>
                     <execution>
-                        <id>default-check</id> <!-- Unique execution ID -->
+                        <id>default-check</id>
                         <phase>process-sources</phase>
                         <goals>
                             <goal>pmd</goal>
@@ -49,7 +49,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>default-test-check</id> <!-- Unique execution ID -->
+                        <id>default-test-check</id>
                         <phase>process-test-sources</phase>
                         <goals>
                             <goal>pmd</goal>
@@ -79,8 +79,8 @@
     <reporting>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>pmd-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
                 <version>3.14.0</version>
                 <reportSets>
                     <reportSet>
