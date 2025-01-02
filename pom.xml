@@ -2,104 +2,134 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  
-  <!-- Project Coordinates -->
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.example</groupId>
-  <artifactId>my-app</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
-  
-  <name>My Maven Project</name>
-  <description>Sample Maven Project</description>
-  
-  <!-- Repositories for Dependency Resolution -->
-  <repositories>
-    <repository>
-      <id>central</id>
-      <url>https://repo.maven.apache.org/maven2</url>
-    </repository>
-  </repositories>
+    <modelVersion>4.0.0</modelVersion>
 
-  <!-- Build Configuration -->
-  <build>
-    <plugins>
-      <!-- Maven Compiler Plugin -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+    <groupId>com.example</groupId>
+    <artifactId>automation-testing</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-  <!-- Dependency Management -->
-  <dependencies>
-    <!-- Add your project dependencies here -->
-    <!-- Example: JUnit -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+    <name>automation-testing</name>
+    <description>Sample Maven project for automation testing</description>
+    <url>http://maven.apache.org</url>
 
-  <!-- Profiles Configuration -->
-  <profiles>
-    <!-- Development Profile -->
-    <profile>
-      <id>dev</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>dev</value>
-        </property>
-      </activation>
-      <properties>
-        <configPath>/path/to/dev/config</configPath>
-      </properties>
-    </profile>
-    
-    <!-- Production Profile (Optional) -->
-    <profile>
-      <id>prod</id>
-      <properties>
-        <configPath>/path/to/prod/config</configPath>
-      </properties>
-    </profile>
-  </profiles>
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+    </properties>
 
-  <!-- Properties -->
-  <properties>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-  </properties>
+    <dependencies>
+        <!-- Example Dependency -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.7.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
-  <!-- Plugin Configuration for HTTP Timeout -->
-  <pluginManagement>
-    <plugins>
-      <!-- HTTP Connection Timeout -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.1.1</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <configuration>
-              <http.connection.timeout>60000</http.connection.timeout>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </pluginManagement>
+    <build>
+        <plugins>
+            <!-- PMD Plugin for static code analysis -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.14.0</version>
+                <executions>
+                    <execution>
+                        <id>default-check</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>pmd</goal>
+                        </goals>
+                        <configuration>
+                            <rulesets>
+                                <ruleset>rulesets/custom-ruleset.xml</ruleset> <!-- Use custom PMD ruleset -->
+                            </rulesets>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>default-test-check</id>
+                        <phase>process-test-sources</phase>
+                        <goals>
+                            <goal>pmd</goal>
+                        </goals>
+                        <configuration>
+                            <rulesets>
+                                <ruleset>rulesets/custom-ruleset.xml</ruleset> <!-- Use custom PMD ruleset -->
+                            </rulesets>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Checkstyle Plugin for code style validation -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <id>checkstyle</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <configLocation>config/checkstyle/google_checks.xml</configLocation> <!-- Checkstyle config file -->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- CPD (Copy-Paste Detector) Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.14.0</version>
+                <executions>
+                    <execution>
+                        <id>cpd</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>cpd</goal>
+                        </goals>
+                        <configuration>
+                            <minimumTokens>100</minimumTokens> <!-- Set minimum tokens for CPD -->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Maven Compiler Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>17</source>
+                    <target>17</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.14.0</version>
+                <reportSets>
+                    <reportSet>
+                        <id>pmd</id>
+                        <reports>
+                            <report>pmd</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>
