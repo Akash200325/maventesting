@@ -16,6 +16,12 @@ pipeline {
                 bat 'mvn -X clean install'
             }
         }
+        stage('static code analysis'){
+            steps {
+                bat 'mvn pmd:pmd'
+                bat 'mvn checkstyle:checkstyle'
+            }
+        }
         stage('Run Tests') {
             steps {
                 // Run Maven tests
