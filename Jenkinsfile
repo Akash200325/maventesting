@@ -1,11 +1,5 @@
 pipeline {
     agent any
-    environment {
-        SONARQUBE_TOKEN = 'sqp_c2f48f5ea3d3443b53e48a67a3d591b20d7f8d9a' // Your SonarQube token
-        SONARQUBE_URL = 'http://localhost:9000'   // Your SonarQube server URL
-        SONARQUBE_PROJECT_KEY = 'maventesting'    // Your SonarQube project key
-        SONARQUBE_PROJECT_NAME = 'maventesting'   // Your SonarQube project name
-    }
     stages {
         stage('Build') {
             steps {
@@ -17,10 +11,10 @@ pipeline {
                 withSonarQubeEnv('sonarqube') { // Ensure 'sonarqube' is correctly configured in Jenkins
                     bat """
                         mvn sonar:sonar ^
-                        -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} ^
-                        -Dsonar.projectName=${SONARQUBE_PROJECT_NAME} ^
-                        -Dsonar.host.url=${SONARQUBE_URL} ^
-                        -Dsonar.login=${SONARQUBE_TOKEN}
+                            -Dsonar.projectKey=testingtrail ^
+                            -Dsonar.projectName='testingtrail' ^
+                            -Dsonar.host.url=http://localhost:9000 ^
+                            -Dsonar.token=sqp_e9eea3b2dc9288a7e0945cd855febf93ffabf2e0
                     """
                 }
             }
