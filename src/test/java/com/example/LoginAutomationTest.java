@@ -7,48 +7,45 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.time.Duration;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LoginAutomationTest {
 
     @Test
     public void testLogin() {
-        // Manually set the path to ChromeDriver (update path if needed)
+        // Manually set the path to ChromeDriver
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\akash\\Downloads\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
 
-        // Initialize ChromeDriver
         WebDriver driver = new ChromeDriver();
 
         try {
             // Navigate to the login page
-            driver.get("https://example.com/login");
+            driver.get("http://localhost:8080/login");
 
-            // Create WebDriverWait for explicit waits
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-            // Wait for the username, password, and login button fields to be visible
+            // Wait for the username, password fields, and submit button
             WebElement usernameField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("username")));
             WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("password")));
-            WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("loginButton")));
+            WebElement submitButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@type='submit']")));
 
-            // Perform login by entering credentials and clicking the login button
+            // Enter valid credentials
             usernameField.sendKeys("testUser");
             passwordField.sendKeys("testPassword");
-            loginButton.click();
+            submitButton.click();
 
-            // Validate successful login by checking page title (you may want to check something more specific)
-            String expectedTitle = "Dashboard";
-            String actualTitle = driver.getTitle();
+            // Validate successful login
+            String expectedTitle = "Login successful!";
+            WebElement responseElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
+            String actualResponse = responseElement.getText();
 
-            // Assert that the login was successful
-            assertEquals(expectedTitle, actualTitle);
-
+            assertEquals(expectedTitle, actualResponse);
         } catch (Exception e) {
-            // Log the exception if something goes wrong
             e.printStackTrace();
         } finally {
-            // Close the browser after the test
             driver.quit();
         }
     }
