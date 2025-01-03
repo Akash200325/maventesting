@@ -47,6 +47,32 @@ public void testLogin() {
     }
 }
 
+    @Test
+public void testLoginWithInvalidCredentials() {
+    try {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        // Locate and interact with the username field
+        WebElement usernameField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("username")));
+        usernameField.sendKeys("invalidUsername");
+
+        // Locate and interact with the password field
+        WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("password")));
+        passwordField.sendKeys("invalidPassword");
+
+        // Locate and click the login button
+        WebElement loginButton = driver.findElement(By.id("loginButton"));
+        loginButton.click();
+
+        // Add an assertion to verify the error message
+        WebElement errorMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("errorMessage")));
+        Assert.assertNotNull("Login test failed, error message not displayed.", errorMessage);
+    } catch (Exception e) {
+        Assert.fail("Login test failed due to an exception: " + e.getMessage());
+    }
+}
+
+
 
     @Test
     void testWelcomeMessageWithEmptyName() {
