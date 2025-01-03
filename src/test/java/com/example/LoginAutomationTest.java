@@ -16,8 +16,8 @@ public class LoginAutomationTest {
 
     @Test
     public void testLogin() {
-        // Manually set the path to ChromeDriver (Ensure path is correct and exists)
-        System.setProperty("webdriver.chrome.driver", "C:\\path\\to\\chromedriver.exe");
+        // Manually set the path to ChromeDriver
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\akash\\Downloads\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
 
         WebDriver driver = new ChromeDriver();
 
@@ -38,7 +38,7 @@ public class LoginAutomationTest {
             submitButton.click();
 
             // Validate successful login
-            String expectedTitle = "Login successful!";  // Adjust this based on actual response
+            String expectedTitle = "Login successful!";
             WebElement responseElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
             String actualResponse = responseElement.getText();
 
