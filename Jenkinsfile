@@ -1,25 +1,27 @@
 pipeline {
     agent any
     environment {
-        SONARQUBE_TOKEN = 'sqp_c2f48f5ea3d3443b53e48a67a3d591b20d7f8d9a' // Your SonarQube token
-        SONARQUBE_URL = 'http://localhost:9000'   // Your SonarQube server URL
-        SONARQUBE_PROJECT_KEY = 'maventesting'    // Your SonarQube project key
-        SONARQUBE_PROJECT_NAME = 'maventesting'   // Your SonarQube project name
+        SONARQUBE_TOKEN = credentials('sonar-token')  // Use Jenkins credentials securely
+        SONARQUBE_URL = 'http://localhost:9000'           // Your SonarQube server URL
+        SONARQUBE_PROJECT_KEY = 'maventesting'            // Your SonarQube project key
+        SONARQUBE_PROJECT_NAME = 'maventesting'           // Your SonarQube project name
     }
     stages {
         stage('Build') {
             steps {
-                bat 'mvn clean install -X'
+                echo 'Building the project...'
+                sh 'mvn clean install -X'  // Use 'sh' instead of 'bat' for cross-platform compatibility
             }
         }
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube') { // Ensure 'sonarqube' is correctly configured in Jenkins
-                    bat """
-                        mvn sonar:sonar ^
-                        -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} ^
-                        -Dsonar.projectName=${SONARQUBE_PROJECT_NAME} ^
-                        -Dsonar.host.url=${SONARQUBE_URL} ^
+                echo 'Starting SonarQube analysis...'
+                withSonarQubeEnv('sonarqube') {  // Ensure 'sonarqube' is configured in Jenkins
+                    sh """
+                        mvn sonar:sonar \
+                        -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} \
+                        -Dsonar.projectName=${SONARQUBE_PROJECT_NAME} \
+                        -Dsonar.host.url=${SONARQUBE_URL} \
                         -Dsonar.login=${SONARQUBE_TOKEN}
                     """
                 }
@@ -27,13 +29,25 @@ pipeline {
         }
         stage('Quality Gate') {
             steps {
+                echo 'Checking SonarQube Quality Gate...'
                 script {
-                    def qg = waitForQualityGate() // Check SonarQube Quality Gate status
+                    def qg = waitForQualityGate()
                     if (qg.status != 'OK') {
                         error "Pipeline aborted due to quality gate failure: ${qg.status}"
                     }
                 }
             }
+        }
+    }
+    post {
+        always {
+            echo 'Pipeline completed!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+        success {
+            echo 'Pipeline succeeded!'
         }
     }
 }
