@@ -19,7 +19,6 @@ pipeline {
         stage('static code analysis'){
             steps {
                 bat 'mvn pmd:pmd'
-                bat 'mvn checksum:checksum'
             }
         }
         stage('Run Tests') {
