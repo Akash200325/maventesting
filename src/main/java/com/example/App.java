@@ -13,20 +13,15 @@ public class App {
             runTests();
         }
 
-        // Duplicated small logic to introduce slight duplication
         String duplicateGreeting = GREETING_MESSAGE;
         logger.info(duplicateGreeting);
-
-        if (args.length > 0 && "test".equals(args[0])) {
-            logger.info(duplicateGreeting);  // Duplicate log statement
-        }
+        logger.info(duplicateGreeting);  // Duplicate log statement to introduce duplication
     }
 
     public static void runTests() {
         String expectedOutput = GREETING_MESSAGE;
         String actualOutput = getGreeting();
 
-        // Basic test assertion logic
         if (!expectedOutput.equals(actualOutput)) {
             throw new AssertionError("Test failed: Output mismatch!");
         } else {
@@ -38,12 +33,16 @@ public class App {
         return GREETING_MESSAGE;
     }
 
-    // Introducing a slightly duplicated method
     public String welcomeMessage(String name) {
         return "Hello, " + name + "!";
     }
 
     public String welcomeMessageDuplicate(String name) {
         return "Hello, " + name + "!";  // Slight duplication
+    }
+
+    // Added a new method to improve test coverage
+    public int addNumbers(int a, int b) {
+        return a + b;
     }
 }
