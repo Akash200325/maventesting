@@ -1,4 +1,4 @@
-package com.example.automation;
+package com.example;
 
 import java.util.logging.Logger;
 
