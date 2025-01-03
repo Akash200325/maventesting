@@ -23,6 +23,32 @@ class AppTest {
     }
 
     @Test
+public void testLogin() {
+    try {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        // Locate and interact with the username field
+        WebElement usernameField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("username")));
+        usernameField.sendKeys("validUsername");
+
+        // Locate and interact with the password field
+        WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("password")));
+        passwordField.sendKeys("validPassword");
+
+        // Locate and click the login button
+        WebElement loginButton = driver.findElement(By.id("loginButton"));
+        loginButton.click();
+
+        // Add an assertion to verify successful login
+        WebElement loggedInUser = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("userProfile")));
+        Assert.assertNotNull("Login failed, user profile not found.", loggedInUser);
+    } catch (Exception e) {
+        Assert.fail("Login test failed due to an exception: " + e.getMessage());
+    }
+}
+
+
+    @Test
     void testWelcomeMessageWithEmptyName() {
         App app = new App();
         String name = "";
