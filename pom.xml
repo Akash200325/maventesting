@@ -30,11 +30,12 @@
     </dependency>
 
     <!-- Selenium WebDriver -->
-    <dependency>
-      <groupId>org.seleniumhq.selenium</groupId>
-      <artifactId>selenium-java</artifactId>
-      <version>4.11.0</version>
-    </dependency>
+   <dependency>
+    <groupId>org.seleniumhq.selenium</groupId>
+    <artifactId>selenium-java</artifactId>
+    <version>4.x.x</version> <!-- Use the latest version -->
+</dependency>
+
 
     <!-- WebDriver Manager -->
     <dependency>
