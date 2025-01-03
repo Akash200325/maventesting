@@ -96,18 +96,28 @@
         </execution>
     </executions>
 </plugin>
-      <plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-checkstyle-plugin</artifactId>
-    <version>3.1.0</version>
-    <executions>
+      <build>
+  <plugins>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-checksum-plugin</artifactId>
+      <version>1.1</version>
+      <executions>
         <execution>
-            <goals>
-                <goal>check</goal>
-            </goals>
+          <goals>
+            <goal>checksum</goal>
+          </goals>
+          <configuration>
+            <files>
+              <file>${project.build.directory}/${project.build.finalName}.jar</file>
+            </files>
+            <algorithm>SHA-256</algorithm> <!-- Can be SHA-1, SHA-256, MD5, etc. -->
+          </configuration>
         </execution>
-    </executions>
-</plugin>
+      </executions>
+    </plugin>
+  </plugins>
+</build>
       <!-- SonarQube Maven Plugin -->
       <plugin>
         <groupId>org.sonarsource.scanner.maven</groupId>
