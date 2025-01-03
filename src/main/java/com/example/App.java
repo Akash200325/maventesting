@@ -25,7 +25,7 @@ public class App {
         }
     }
 
-    // Existing method
+    // Method to return the welcome message
     public static String getWelcomeMessage() {
         return WELCOME_MESSAGE;
     }
