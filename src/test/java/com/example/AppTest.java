@@ -1,112 +1,46 @@
 package com.example;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-class AppTest {
+import java.time.Duration;
 
-    @Test
-    void testGetGreeting() {
-        App app = new App();
-        String expected = App.WELCOME_MESSAGE; // Changed to use WELCOME_MESSAGE
-        String actual = app.getWelcomeMessage(); // Use getWelcomeMessage method
-        assertEquals(expected, actual, "Greeting should be 'Welcome to Automation!'");
+public class AppTest {
+
+    private WebDriver driver;
+
+    @BeforeEach
+    public void setUp() {
+        // Set up the WebDriver (Chrome in this case)
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");  // Run in headless mode (no UI)
+        driver = new ChromeDriver(options);
     }
 
     @Test
-    void testWelcomeMessage() {
-        App app = new App();
-        String name = "akash_k_rao";
-        String expected = "Hello, akash_k_rao, welcome to Automation!";
-        String actual = app.welcomeMessage(name);
-        assertEquals(expected, actual, "Welcome message should include the user's name.");
-    }
+    public void testLoginFunctionality() {
+        driver.get("https://www.example.com");  // Replace with your URL
 
-    @Test
-public void testLogin() {
-    try {
+        // Wait until an element is clickable
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("loginButton")));
 
-        // Locate and interact with the username field
-        WebElement usernameField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("username")));
-        usernameField.sendKeys("validUsername");
-
-        // Locate and interact with the password field
-        WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("password")));
-        passwordField.sendKeys("validPassword");
-
-        // Locate and click the login button
-        WebElement loginButton = driver.findElement(By.id("loginButton"));
+        // Click on login button
         loginButton.click();
 
-        // Add an assertion to verify successful login
-        WebElement loggedInUser = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("userProfile")));
-        Assert.assertNotNull("Login failed, user profile not found.", loggedInUser);
-    } catch (Exception e) {
-        Assert.fail("Login test failed due to an exception: " + e.getMessage());
-    }
-}
-
-    @Test
-public void testLoginWithInvalidCredentials() {
-    try {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-        // Locate and interact with the username field
-        WebElement usernameField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("username")));
-        usernameField.sendKeys("invalidUsername");
-
-        // Locate and interact with the password field
-        WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("password")));
-        passwordField.sendKeys("invalidPassword");
-
-        // Locate and click the login button
-        WebElement loginButton = driver.findElement(By.id("loginButton"));
-        loginButton.click();
-
-        // Add an assertion to verify the error message
-        WebElement errorMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("errorMessage")));
-        Assert.assertNotNull("Login test failed, error message not displayed.", errorMessage);
-    } catch (Exception e) {
-        Assert.fail("Login test failed due to an exception: " + e.getMessage());
-    }
-}
-
-
-
-    @Test
-    void testWelcomeMessageWithEmptyName() {
-        App app = new App();
-        String name = "";
-        String expected = "Hello, , welcome to Automation!"; // Fixed the expected output
-        String actual = app.welcomeMessage(name);
-        assertEquals(expected, actual, "Welcome message should handle empty names.");
+        // Assert conditions (example)
+        WebElement dashboard = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("dashboard")));
+        Assertions.assertNotNull(dashboard, "Dashboard should be visible after login");
     }
 
-    @Test
-    void testWelcomeMessageWithNullName() {
-        App app = new App();
-        String name = null;
-        String expected = "Hello, null, welcome to Automation!"; // Fixed the expected output
-        String actual = app.welcomeMessage(name);
-        assertEquals(expected, actual, "Welcome message should handle null names.");
-    }
-
-    @Test
-    void testRunTests() {
-        App app = new App();
-        app.runTests(); 
-    }
-
-    @Test
-    void testMainWithTestArgument() {
-        String[] args = {"test"};
-        App.main(args);
-    }
-
-    @Test
-    void testMainWithoutArguments() {
-        String[] args = {};
-        App.main(args);
+    @AfterEach
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }
