@@ -1,81 +1,64 @@
 package com.example;
 
-import com.sun.net.httpserver.HttpServer;
-import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
-
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
+import java.util.logging.Logger;
 
 public class App {
-    public static void main(String[] args) throws IOException {
-        // Create an HTTP server on port 8080
-        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+    private static final Logger LOGGER = Logger.getLogger(App.class.getName());
 
-        // Add a context to serve the login form
-        server.createContext("/login", new LoginHandler());
+    // Constants for response headers
+    private static final String CONTENT_TYPE_HTML = "text/html; charset=UTF-8";
+    private static final String HTML_TEMPLATE = "<html><body><form method='POST' action='/login'>" +
+                                                "<input type='text' name='username' />" +
+                                                "<input type='password' name='password' />" +
+                                                "<button type='submit'>Login</button></form></body></html>";
+    private static final String SUCCESS_RESPONSE = "<html><body>Login Successful!</body></html>";
 
-        // Start the server
-        server.setExecutor(null);
-        server.start();
-        System.out.println("Server is running at http://localhost:8080/login");
+    // Method to handle GET request and return a login form
+    public void getLoginForm(HttpExchange exchange) throws IOException {
+        try {
+            // Set headers
+            setResponseHeaders(exchange);
+
+            // Send response
+            String response = HTML_TEMPLATE;
+            sendResponse(exchange, response);
+        } catch (IOException e) {
+            LOGGER.severe("Error during GET request handling: " + e.getMessage());
+            throw e;
+        }
     }
 
-    static class LoginHandler implements HttpHandler {
-        @Override
-        public void handle(HttpExchange exchange) throws IOException {
-            String response;
-            switch (exchange.getRequestMethod()) {
-                case "GET":
-                    response = getLoginForm();
-                    sendResponse(exchange, response, "text/html");
-                    break;
+    // Method to handle POST request for login
+    public void postLogin(HttpExchange exchange) throws IOException {
+        try {
+            // Set headers
+            setResponseHeaders(exchange);
 
-                case "POST":
-                    // Process login submission (dummy handling for demonstration)
-                    response = "Login successful!";
-                    sendResponse(exchange, response, "text/plain");
-                    break;
-
-                default:
-                    // Handle unsupported methods
-                    response = "Method Not Allowed";
-                    exchange.sendResponseHeaders(405, response.length());
-                    OutputStream os = exchange.getResponseBody();
-                    os.write(response.getBytes());
-                    os.close();
-                    break;
-            }
+            // Send response
+            String response = SUCCESS_RESPONSE;
+            sendResponse(exchange, response);
+        } catch (IOException e) {
+            LOGGER.severe("Error during POST request handling: " + e.getMessage());
+            throw e;
         }
+    }
 
-        private String getLoginForm() {
-            return """
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title>Login Page</title>
-                    </head>
-                    <body>
-                        <h1>Login</h1>
-                        <form action="/login" method="post">
-                            <label for="username">Username:</label>
-                            <input type="text" id="username" name="username"><br><br>
-                            <label for="password">Password:</label>
-                            <input type="password" id="password" name="password"><br><br>
-                            <button type="submit">Submit</button>
-                        </form>
-                    </body>
-                    </html>
-                    """;
-        }
+    // Helper method to set response headers
+    private void setResponseHeaders(HttpExchange exchange) {
+        Headers headers = exchange.getResponseHeaders();
+        headers.set("Content-Type", CONTENT_TYPE_HTML);
+    }
 
-        private void sendResponse(HttpExchange exchange, String response, String contentType) throws IOException {
-            exchange.getResponseHeaders().set("Content-Type", contentType);
-            exchange.sendResponseHeaders(200, response.length());
-            try (OutputStream os = exchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
-        }
+    // Helper method to send response
+    private void sendResponse(HttpExchange exchange, String response) throws IOException {
+        exchange.sendResponseHeaders(200, response.getBytes(StandardCharsets.UTF_8).length);
+        OutputStream os = exchange.getResponseBody();
+        os.write(response.getBytes(StandardCharsets.UTF_8));
+        os.close();
     }
 }
