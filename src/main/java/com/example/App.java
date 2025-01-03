@@ -25,12 +25,17 @@ public class App {
         }
     }
 
-    // Method being tested
+    // Existing method
     public static String getWelcomeMessage() {
         return WELCOME_MESSAGE;
     }
 
-    // Method tested in LoginAutomationTest.java
+    // Add welcomeMessage(String name) to match the test
+    public String welcomeMessage(String name) {
+        return "Hello, " + name + ", welcome to Automation!";
+    }
+
+    // This method seems to be already tested in LoginAutomationTest.java
     public String personalizedWelcome(String name) {
         return "Hello, " + name + ", welcome to Automation!";
     }
