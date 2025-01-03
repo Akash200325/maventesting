@@ -4,10 +4,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.time.Duration;
 
 class LoginAutomationTest {
 
@@ -36,8 +39,11 @@ class LoginAutomationTest {
             passwordField.sendKeys("password123");
             loginButton.click();
 
+            // Wait until the dashboard title is visible
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebElement dashboardTitle = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("dashboard-title")));
+            
             // Validating successful login by checking the page title or a unique element
-            WebElement dashboardTitle = driver.findElement(By.className("dashboard-title"));
             String expectedTitle = "Dashboard";
             String actualTitle = dashboardTitle.getText();
 
@@ -76,8 +82,11 @@ class LoginAutomationTest {
             passwordField.sendKeys("wrong_password");
             loginButton.click();
 
+            // Wait for the error message to be visible
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebElement errorMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("errorMessage")));
+
             // Validating failure of login by checking for error message
-            WebElement errorMessage = driver.findElement(By.id("errorMessage"));
             String expectedErrorMessage = "Invalid username or password.";
             String actualErrorMessage = errorMessage.getText();
 
