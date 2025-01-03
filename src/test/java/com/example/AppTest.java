@@ -53,7 +53,8 @@ public class AppTest {
         verify(exchange).getResponseHeaders();
         assertTrue(exchange.getResponseHeaders().containsKey("Content-Type"));
 
-        // Verify output is written to the response body
-        verify(exchange.getResponseBody(), atLeastOnce()).write(any(byte[].class), eq(0), anyInt());
+        // Match the exact byte array written to the response body
+        byte[] expectedResponse = "<html><body>Login Success!</body></html>".getBytes(StandardCharsets.UTF_8);
+        verify(exchange.getResponseBody()).write(eq(expectedResponse), eq(0), eq(expectedResponse.length));
     }
 }
