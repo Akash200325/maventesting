@@ -53,11 +53,11 @@ class LoginAutomationTest {
         // Create an instance of the App class
         App app = new App();
 
-        // Testing welcome message with a name
+        // Testing personalized welcome message with a name
         String result = app.welcomeMessage("Alice");
 
         // Validating the result
-        assertEquals("Hello, Alice!", result, "The welcome message should be correct.");
+        assertEquals("Hello, Alice, welcome to Automation!", result, "The welcome message should be correct.");
     }
 
     @Test
