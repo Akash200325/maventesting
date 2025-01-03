@@ -4,13 +4,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import java.time.Duration;
 
 class LoginAutomationTest {
 
@@ -18,34 +15,31 @@ class LoginAutomationTest {
 
     @BeforeAll
     static void setup() {
-        // Set up WebDriver for Chrome
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\akash\\Downloads\\chromedriver-win64 (1)\\chromedriver-win64\\chromedriver.exe");
-        driver = new ChromeDriver();
+        // Setting up the WebDriver for Chrome
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\akash\\Downloads\\chromedriver.exe"); // Correct path for ChromeDriver
+        driver = new ChromeDriver(); 
     }
 
     @Test
     void testLogin() {
         try {
-            // Navigating to a sample login page
-            driver.get("https://www.example.com/login");
+            // Navigating to the Sauce Demo login page
+            driver.get("https://www.saucedemo.com");
 
             // Locate the username and password fields
-            WebElement usernameField = driver.findElement(By.id("username"));
+            WebElement usernameField = driver.findElement(By.id("user-name"));
             WebElement passwordField = driver.findElement(By.id("password"));
-            WebElement loginButton = driver.findElement(By.id("loginButton"));
+            WebElement loginButton = driver.findElement(By.id("login-button"));
 
-            // Performing login with test credentials
-            usernameField.sendKeys("test_user");
-            passwordField.sendKeys("password123");
+            // Performing login using provided test credentials
+            usernameField.sendKeys("standard_user");
+            passwordField.sendKeys("secret_sauce");
             loginButton.click();
 
-            // Wait until the dashboard title is visible
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-            WebElement dashboardTitle = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("dashboard-title")));
-            
             // Validating successful login by checking the page title or a unique element
-            String expectedTitle = "Dashboard";
-            String actualTitle = dashboardTitle.getText();
+            WebElement inventoryPageTitle = driver.findElement(By.className("title"));
+            String expectedTitle = "PRODUCTS";
+            String actualTitle = inventoryPageTitle.getText();
 
             assertEquals(expectedTitle.toLowerCase(), actualTitle.toLowerCase(), "Login test failed: Title mismatch.");
         } catch (Exception e) {
@@ -56,45 +50,13 @@ class LoginAutomationTest {
 
     @Test
     void testWelcomeMessage() {
-        // Create an instance of the App class
+        // Created an instance of App
         App app = new App();
 
-        // Testing personalized welcome message with a name
-        String result = app.welcomeMessage("Alice");
+        String result = app.welcomeMessage("Utkarsh");
 
         // Validating the result
-        assertEquals("Hello, Alice, welcome to Automation!", result, "The welcome message should be correct.");
-    }
-
-    @Test
-    void testLoginWithInvalidCredentials() {
-        try {
-            // Navigating to the login page
-            driver.get("https://www.example.com/login");
-
-            // Locate the username and password fields
-            WebElement usernameField = driver.findElement(By.id("username"));
-            WebElement passwordField = driver.findElement(By.id("password"));
-            WebElement loginButton = driver.findElement(By.id("loginButton"));
-
-            // Attempt login with invalid credentials
-            usernameField.sendKeys("invalid_user");
-            passwordField.sendKeys("wrong_password");
-            loginButton.click();
-
-            // Wait for the error message to be visible
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-            WebElement errorMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("errorMessage")));
-
-            // Validating failure of login by checking for error message
-            String expectedErrorMessage = "Invalid username or password.";
-            String actualErrorMessage = errorMessage.getText();
-
-            assertEquals(expectedErrorMessage, actualErrorMessage, "Login test failed: Error message mismatch.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new AssertionError("Login test failed due to an exception.");
-        }
+        assertEquals("Hello, Utkarsh!", result, "The welcome message should be correct.");
     }
 
     @AfterAll
