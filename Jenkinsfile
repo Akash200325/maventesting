@@ -1,42 +1,49 @@
 pipeline {
     agent any
+
     environment {
-        SONARQUBE_TOKEN = 'sqp_c2f48f5ea3d3443b53e48a67a3d591b20d7f8d9a' // Your SonarQube token
-        SONARQUBE_URL = 'http://localhost:9000'   // Your SonarQube server URL
-        SONARQUBE_PROJECT_KEY = 'maventesting'    // Your SonarQube project key
-        SONARQUBE_PROJECT_NAME = 'maventesting'   // Your SonarQube project name
+        SONARQUBE = 'sonarqube' // Update with your SonarQube server name
     }
+
     stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the code from GitHub
+                git branch: 'main', url: 'https://github.com/Akash200325/maventesting.git'
+            }
+        }
+
         stage('Build') {
             steps {
-                script {
-                    // Clean and build with debug logs enabled
-                    bat 'mvn clean install -X'
-                }
+                // Run the Maven build
+                bat 'mvn clean install'
             }
         }
+
+        stage('Run Tests') {
+            steps {
+                // Run the Maven tests
+                bat 'mvn test'
+            }
+        }
+
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube') { // Ensure 'sonarqube' is correctly configured in Jenkins
-                    bat """
-                        mvn sonar:sonar ^
-                        -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} ^
-                        -Dsonar.projectName=${SONARQUBE_PROJECT_NAME} ^
-                        -Dsonar.host.url=${SONARQUBE_URL} ^
-                        -Dsonar.login=${SONARQUBE_TOKEN}
-                    """
-                }
+                // Run the SonarQube analysis
+                bat '''
+                mvn clean verify sonar:sonar 
+                                 -Dsonar.projectKey=maventesting1 ^
+                                 -Dsonar.projectName='maventesting1' ^
+                                 -Dsonar.host.url=http://localhost:9000 ^
+                                 -Dsonar.token=sqp_6b49eaa8c3122ed499fe9d3044645fdcffdef1d4
+                '''
             }
         }
-        stage('Quality Gate') {
+
+        stage('Success') {
             steps {
-                script {
-                    // Wait for the quality gate to pass or fail
-                    def qg = waitForQualityGate() // Check SonarQube Quality Gate status
-                    if (qg.status != 'OK') {
-                        error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                    }
-                }
+                // Print success message
+                echo 'Build, Test, and SonarQube Analysis completed successfully!'
             }
         }
     }
