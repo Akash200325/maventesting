@@ -33,8 +33,9 @@
    <dependency>
     <groupId>org.seleniumhq.selenium</groupId>
     <artifactId>selenium-java</artifactId>
-    <version>4.x.x</version> <!-- Use the latest version -->
+    <version>4.0.0</version> <!-- or the latest stable version -->
 </dependency>
+
 
 
     <!-- WebDriver Manager -->
