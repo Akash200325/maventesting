@@ -14,7 +14,6 @@ pipeline {
             steps {
                 // Run Maven clean install to build the project
                 bat 'mvn -X clean install'
-'
             }
         }
         stage('Run Tests') {
