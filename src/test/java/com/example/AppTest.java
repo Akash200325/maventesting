@@ -3,7 +3,6 @@ package com.example;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-
 class AppTest {
 
     @Test
@@ -13,6 +12,7 @@ class AppTest {
         String actual = app.getGreeting();
         assertEquals(expected, actual, "Greeting should be 'Hello World!'");
     }
+
     @Test
     void testWelcomeMessage() {
         App app = new App();
@@ -43,19 +43,30 @@ class AppTest {
     @Test
     void testRunTests() {
         App app = new App();
-        app.runTests(); 
+        app.runTests(); // Duplicate test to introduce a small percentage of duplication
+        app.runTests(); // Duplicate test to introduce a small percentage of duplication
     }
 
-@Test
+    @Test
+    void testRunTestsFailure() {
+        String originalGreeting = App.GREETING_MESSAGE;
+        App.GREETING_MESSAGE = "Wrong Greeting";
+
+        AssertionError error = assertThrows(AssertionError.class, App::runTests);
+        assertTrue(error.getMessage().contains("Output mismatch!"));
+
+        App.GREETING_MESSAGE = originalGreeting; // Restore original value
+    }
+
+    @Test
     void testMainWithTestArgument() {
         String[] args = {"test"};
         App.main(args);
     }
-   
+
     @Test
     void testMainWithoutArguments() {
         String[] args = {};
         App.main(args);
-      
     }
 }
