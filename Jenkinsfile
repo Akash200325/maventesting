@@ -12,12 +12,12 @@ pipeline {
         }
         stage('Build') {
             steps {
-                bat "'${MAVEN_HOME}/bin/mvn' clean install -X"
+                bat "\"${MAVEN_HOME}/bin/mvn\" clean install -X"
             }
         }
         stage('Run Tests') {
             steps {
-                bat "'${MAVEN_HOME}/bin/mvn' test"
+                bat "\"${MAVEN_HOME}/bin/mvn\" test"
             }
         }
         stage('SonarQube Analysis') {
