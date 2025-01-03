@@ -53,10 +53,10 @@ class LoginAutomationTest {
         // Created an instance of App
         App app = new App();
 
-        String result = app.welcomeMessage("Utkarsh");
+        String result = app.welcomeMessage("AKASH");
 
         // Validating the result
-        assertEquals("Hello, Utkarsh!", result, "The welcome message should be correct.");
+        assertEquals("Hello, AKASH.");
     }
 
     @AfterAll
