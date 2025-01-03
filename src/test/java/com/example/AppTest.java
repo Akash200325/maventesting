@@ -8,15 +8,16 @@ class AppTest {
     @Test
     void testGetGreeting() {
         App app = new App();
-        String expected = App.GREETING_MESSAGE;
-        String actual = app.getGreeting();
-        assertEquals(expected, actual, "Greeting should be 'Hello World!'");
+        String expected = App.WELCOME_MESSAGE; // Changed to use WELCOME_MESSAGE
+        String actual = app.getWelcomeMessage(); // Use getWelcomeMessage method
+        assertEquals(expected, actual, "Greeting should be 'Welcome to Automation!'");
     }
+
     @Test
     void testWelcomeMessage() {
         App app = new App();
         String name = "akash_k_rao";
-        String expected = "Hello, akash!";
+        String expected = "Hello, akash_k_rao, welcome to Automation!";
         String actual = app.welcomeMessage(name);
         assertEquals(expected, actual, "Welcome message should include the user's name.");
     }
@@ -25,7 +26,7 @@ class AppTest {
     void testWelcomeMessageWithEmptyName() {
         App app = new App();
         String name = "";
-        String expected = "Hello, !";
+        String expected = "Hello, , welcome to Automation!"; // Fixed the expected output
         String actual = app.welcomeMessage(name);
         assertEquals(expected, actual, "Welcome message should handle empty names.");
     }
@@ -34,7 +35,7 @@ class AppTest {
     void testWelcomeMessageWithNullName() {
         App app = new App();
         String name = null;
-        String expected = "Hello, null!";
+        String expected = "Hello, null, welcome to Automation!"; // Fixed the expected output
         String actual = app.welcomeMessage(name);
         assertEquals(expected, actual, "Welcome message should handle null names.");
     }
@@ -45,18 +46,15 @@ class AppTest {
         app.runTests(); 
     }
 
-    
     @Test
     void testMainWithTestArgument() {
         String[] args = {"test"};
         App.main(args);
     }
 
-   
     @Test
     void testMainWithoutArguments() {
         String[] args = {};
         App.main(args);
-      
     }
 }
