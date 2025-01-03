@@ -33,7 +33,9 @@ public class AppTest {
         app.getLoginForm(exchange);
         verify(exchange).sendResponseHeaders(eq(200), anyLong());
         assertTrue(exchange.getResponseHeaders().containsKey("Content-Type"));
-        assertEquals("text/html", exchange.getResponseHeaders().getFirst("Content-Type"));
+        // Update this assertion to allow charset in Content-Type
+        String contentType = exchange.getResponseHeaders().getFirst("Content-Type");
+        assertTrue(contentType.startsWith("text/html"));
     }
 
     @Test
@@ -42,7 +44,9 @@ public class AppTest {
         app.postLogin(exchange);
         verify(exchange).sendResponseHeaders(eq(200), anyLong());
         assertTrue(exchange.getResponseHeaders().containsKey("Content-Type"));
-        assertEquals("text/html", exchange.getResponseHeaders().getFirst("Content-Type"));
+        // Update this assertion to allow charset in Content-Type
+        String contentType = exchange.getResponseHeaders().getFirst("Content-Type");
+        assertTrue(contentType.startsWith("text/html"));
 
         ByteArrayOutputStream outputStream = (ByteArrayOutputStream) exchange.getResponseBody();
         String response = outputStream.toString(StandardCharsets.UTF_8);
