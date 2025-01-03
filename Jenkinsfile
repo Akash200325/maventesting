@@ -8,10 +8,10 @@ pipeline {
     }
     stages {
         stage('Build') {
-            steps {
-                bat 'mvn clean install -X'
-            }
-        }
+    steps {
+        bat 'mvn clean install -U'
+    }
+}
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') { // Ensure 'sonarqube' is correctly configured in Jenkins
