@@ -19,7 +19,7 @@ pipeline {
         stage('static code analysis'){
             steps {
                 bat 'mvn pmd:pmd'
-                bat 'mvn checkstyle:checkstyle'
+                bat 'mvn checksum:checksum'
             }
         }
         stage('Run Tests') {
