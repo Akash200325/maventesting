@@ -1,55 +1,52 @@
 package com.example;
 
-import com.sun.net.httpserver.Headers;
-import com.sun.net.httpserver.HttpExchange;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.io.OutputStream;
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class AppTest {
+import java.time.Duration;
 
-    private HttpExchange exchange;
-    private App app;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-    @BeforeEach
-    public void setUp() {
-        app = new App();
-
-        // Mock HttpExchange
-        exchange = mock(HttpExchange.class);
-
-        // Mock Headers
-        Headers headers = new Headers();
-        when(exchange.getResponseHeaders()).thenReturn(headers);
-
-        // Mock OutputStream
-        OutputStream outputStream = mock(OutputStream.class);
-        when(exchange.getResponseBody()).thenReturn(outputStream);
-    }
+public class LoginAutomationTest {
 
     @Test
-    public void testGetLoginForm() throws Exception {
-        app.getLoginForm(exchange);
+    public void testLogin() {
+        // Manually set the path to ChromeDriver (Ensure path is correct and exists)
+        System.setProperty("webdriver.chrome.driver", "C:\\path\\to\\chromedriver.exe");
 
-        // Verify that headers are set correctly
-        verify(exchange).getResponseHeaders();
-        assertTrue(exchange.getResponseHeaders().containsKey("Content-Type"));
+        WebDriver driver = new ChromeDriver();
 
-        // Verify response content is sent
-        verify(exchange.getResponseBody(), atLeastOnce()).write(any(byte[].class), eq(0), anyInt());
-    }
+        try {
+            // Navigate to the login page
+            driver.get("http://localhost:8080/login");
 
-    @Test
-    public void testPostLogin() throws Exception {
-        app.postLogin(exchange);
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        // Verify that headers are set correctly
-        verify(exchange).getResponseHeaders();
-        assertTrue(exchange.getResponseHeaders().containsKey("Content-Type"));
+            // Wait for the username, password fields, and submit button
+            WebElement usernameField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("username")));
+            WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("password")));
+            WebElement submitButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@type='submit']")));
 
-        // Verify response content is sent
-        verify(exchange.getResponseBody(), atLeastOnce()).write(any(byte[].class), eq(0), anyInt());
+            // Enter valid credentials
+            usernameField.sendKeys("testUser");
+            passwordField.sendKeys("testPassword");
+            submitButton.click();
+
+            // Validate successful login
+            String expectedTitle = "Login successful!";  // Adjust this based on actual response
+            WebElement responseElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
+            String actualResponse = responseElement.getText();
+
+            assertEquals(expectedTitle, actualResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            driver.quit();
+        }
     }
 }
