@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Build') {
     steps {
-        bat 'mvn clean install -U'
+        bat 'mvn clean install -X'
     }
 }
         stage('SonarQube Analysis') {
