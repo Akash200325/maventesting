@@ -8,20 +8,16 @@ public class App {
 
     public static void main(String[] args) {
         logger.info(GREETING_MESSAGE);
-
+        // If "test" argument passes,then we run the embedded test
         if (args.length > 0 && "test".equals(args[0])) {
             runTests();
         }
-
-        String duplicateGreeting = GREETING_MESSAGE;
-        logger.info(duplicateGreeting);
-        logger.info(duplicateGreeting);  // Duplicate log statement to introduce duplication
     }
 
     public static void runTests() {
         String expectedOutput = GREETING_MESSAGE;
         String actualOutput = getGreeting();
-
+        //Here we have test assertion logic
         if (!expectedOutput.equals(actualOutput)) {
             throw new AssertionError("Test failed: Output mismatch!");
         } else {
@@ -29,20 +25,13 @@ public class App {
         }
     }
 
+    // Method testing
     public static String getGreeting() {
         return GREETING_MESSAGE;
     }
 
+    //  Method tested in LoginAutomationTest.java
     public String welcomeMessage(String name) {
         return "Hello, " + name + "!";
-    }
-
-    public String welcomeMessageDuplicate(String name) {
-        return "Hello, " + name + "!";  // Slight duplication
-    }
-
-    // Added a new method to improve test coverage
-    public int addNumbers(int a, int b) {
-        return a + b;
     }
 }
