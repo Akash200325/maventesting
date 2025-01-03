@@ -84,47 +84,47 @@
           </execution>
         </executions>
       </plugin>
-    <plugin>
-       <groupId>org.apache.maven.plugins</groupId>
+
+      <!-- PMD Plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
-          <version>3.14.0</version>
-       <executions>
-        <execution>
+        <version>3.14.0</version>
+        <executions>
+          <execution>
             <goals>
-                <goal>pmd</goal>
+              <goal>pmd</goal>
             </goals>
-        </execution>
-    </executions>
-</plugin>
-      <build>
-  <plugins>
-    <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-checksum-plugin</artifactId>
-      <version>1.1</version>
-      <executions>
-        <execution>
-          <goals>
-            <goal>checksum</goal>
-          </goals>
-          <configuration>
-            <files>
-              <file>${project.build.directory}/${project.build.finalName}.jar</file>
-            </files>
-            <algorithm>SHA-256</algorithm> <!-- Can be SHA-1, SHA-256, MD5, etc. -->
-          </configuration>
-        </execution>
-      </executions>
-    </plugin>
-  </plugins>
-</build>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Checksum Plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checksum-plugin</artifactId>
+        <version>1.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>checksum</goal>
+            </goals>
+            <configuration>
+              <files>
+                <file>${project.build.directory}/${project.build.finalName}.jar</file>
+              </files>
+              <algorithm>SHA-256</algorithm>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <!-- SonarQube Maven Plugin -->
       <plugin>
         <groupId>org.sonarsource.scanner.maven</groupId>
         <artifactId>sonar-maven-plugin</artifactId>
         <version>3.9.1.2184</version>
       </plugin>
-      
     </plugins>
   </build>
 </project>
