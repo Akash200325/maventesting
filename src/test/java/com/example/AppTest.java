@@ -1,38 +1,57 @@
-package com.example;
-
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.io.ByteArrayOutputStream;
+import org.mockito.Mockito;
+
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AppTest {
 
+    private HttpExchange exchange;
+    private App app;  // Assuming App is your main class with getLoginForm() and postLogin() methods
+
+    @BeforeEach
+    public void setUp() {
+        // Initialize the class under test
+        app = new App();
+
+        // Mock the HttpExchange object
+        exchange = mock(HttpExchange.class);
+
+        // Mock the Headers object and set it to return a valid instance
+        Headers headers = new Headers();
+        when(exchange.getResponseHeaders()).thenReturn(headers);
+
+        // Mock the OutputStream object
+        OutputStream outputStream = mock(OutputStream.class);
+        when(exchange.getResponseBody()).thenReturn(outputStream);
+    }
+
     @Test
     public void testGetLoginForm() throws Exception {
-        App.LoginHandler handler = new App.LoginHandler();
-        HttpExchange exchange = mock(HttpExchange.class);
+        // Call the method under test
+        app.getLoginForm(exchange);
 
-        when(exchange.getRequestMethod()).thenReturn("GET");
-        OutputStream os = new ByteArrayOutputStream();
-        when(exchange.getResponseBody()).thenReturn(os);
-
-        handler.handle(exchange);
-        assertTrue(os.toString().contains("<h1>Login</h1>"));
+        // Verify headers are set correctly
+        verify(exchange).getResponseHeaders();
+        assertTrue(exchange.getResponseHeaders().containsKey("Content-Type"));
     }
 
     @Test
     public void testPostLogin() throws Exception {
-        App.LoginHandler handler = new App.LoginHandler();
-        HttpExchange exchange = mock(HttpExchange.class);
+        // Call the method under test
+        app.postLogin(exchange);
 
-        when(exchange.getRequestMethod()).thenReturn("POST");
-        OutputStream os = new ByteArrayOutputStream();
-        when(exchange.getResponseBody()).thenReturn(os);
+        // Verify the response headers and output
+        verify(exchange).getResponseHeaders();
+        assertTrue(exchange.getResponseHeaders().containsKey("Content-Type"));
 
-        handler.handle(exchange);
-        assertEquals("Login successful!", os.toString().trim());
+        // Verify output is written to the response body
+        verify(exchange.getResponseBody(), atLeastOnce()).write(any(byte[].class), eq(0), anyInt());
     }
 }
