@@ -8,10 +8,13 @@ pipeline {
     }
     stages {
         stage('Build') {
-    steps {
-        bat 'mvn clean install -X'
-    }
-}
+            steps {
+                script {
+                    // Clean and build with debug logs enabled
+                    bat 'mvn clean install -X'
+                }
+            }
+        }
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') { // Ensure 'sonarqube' is correctly configured in Jenkins
@@ -28,6 +31,7 @@ pipeline {
         stage('Quality Gate') {
             steps {
                 script {
+                    // Wait for the quality gate to pass or fail
                     def qg = waitForQualityGate() // Check SonarQube Quality Gate status
                     if (qg.status != 'OK') {
                         error "Pipeline aborted due to quality gate failure: ${qg.status}"
